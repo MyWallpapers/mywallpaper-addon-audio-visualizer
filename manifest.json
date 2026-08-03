@@ -2,7 +2,7 @@
   "runtime": "canvas-v1",
   "name": "Audio Visualizer",
   "description": "Visualizes the audio currently playing on Windows through an open-source WASAPI loopback companion.",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "entry": "dist/index.html",
   "thumbnail": "assets/thumbnail.png",
   "deviceSettingsVersion": "1",

@@ -1,0 +1,19 @@
+{
+  "name": "mywallpaper-addon-audio-visualizer",
+  "version": "1.0.0",
+  "private": true,
+  "license": "MIT",
+  "type": "module",
+  "packageManager": "pnpm@11.12.0",
+  "scripts": {
+    "build": "vite build",
+    "dev": "vite --host 127.0.0.1 --port 5181",
+    "smoke:native": "node scripts/smoke-native.mjs",
+    "typecheck": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@types/node": "^22.20.1",
+    "typescript": "~5.8.3",
+    "vite": "^7.3.6"
+  }
+}

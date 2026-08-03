@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="720" viewBox="0 0 1280 720">
+  <defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#7c5cff"/><stop offset="1" stop-color="#39d9ff"/></linearGradient><filter id="b"><feGaussianBlur stdDeviation="18"/></filter></defs>
+  <rect width="1280" height="720" rx="48" fill="#070912"/>
+  <ellipse cx="640" cy="395" rx="440" ry="210" fill="#4f3cff" opacity=".18" filter="url(#b)"/>
+  <g fill="url(#g)">
+    <rect x="220" y="322" width="34" height="76" rx="17"/><rect x="278" y="280" width="34" height="160" rx="17"/><rect x="336" y="235" width="34" height="250" rx="17"/><rect x="394" y="300" width="34" height="120" rx="17"/><rect x="452" y="190" width="34" height="340" rx="17"/><rect x="510" y="255" width="34" height="210" rx="17"/><rect x="568" y="145" width="34" height="430" rx="17"/><rect x="626" y="215" width="34" height="290" rx="17"/><rect x="684" y="170" width="34" height="380" rx="17"/><rect x="742" y="265" width="34" height="190" rx="17"/><rect x="800" y="215" width="34" height="290" rx="17"/><rect x="858" y="292" width="34" height="136" rx="17"/><rect x="916" y="250" width="34" height="220" rx="17"/><rect x="974" y="310" width="34" height="100" rx="17"/>
+  </g>
+  <text x="640" y="650" text-anchor="middle" fill="#eef1ff" font-family="Segoe UI, sans-serif" font-weight="700" font-size="52">Audio Visualizer</text>
+</svg>

@@ -1,0 +1,42 @@
+{
+  "runtime": "canvas-v1",
+  "name": "Audio Visualizer",
+  "description": "Visualizes the audio currently playing on Windows through an open-source WASAPI loopback companion.",
+  "version": "1.0.0",
+  "entry": "dist/index.html",
+  "thumbnail": "assets/thumbnail.png",
+  "deviceSettingsVersion": "1",
+  "ui": { "pointerEvents": "none" },
+  "settings": [
+    { "id": "visualization", "type": "section", "label": "Visualization" },
+    { "id": "style", "type": "select", "label": "Style", "parent": "visualization", "scope": "layer", "default": "bars", "options": [
+      { "label": "Bars", "value": "bars" },
+      { "label": "Wave", "value": "wave" },
+      { "label": "Mirrored bars", "value": "mirrored" }
+    ] },
+    { "id": "barCount", "type": "range", "label": "Detail", "parent": "visualization", "scope": "layer", "default": 48, "min": 16, "max": 96, "step": 1 },
+    { "id": "sensitivity", "type": "range", "label": "Sensitivity", "parent": "visualization", "scope": "layer", "default": 1.6, "min": 0.5, "max": 4, "step": 0.1 },
+    { "id": "smoothing", "type": "range", "label": "Smoothing", "parent": "visualization", "scope": "layer", "default": 0.72, "min": 0, "max": 0.95, "step": 0.01 },
+    { "id": "capture", "type": "section", "label": "Capture", "description": "Shared by every Audio Visualizer instance on this device.", "defaultCollapsed": true },
+    { "id": "refreshRate", "type": "select", "label": "Refresh rate", "parent": "capture", "scope": "device", "default": "30fps", "options": [
+      { "label": "30 frames per second", "value": "30fps" },
+      { "label": "60 frames per second", "value": "60fps" }
+    ] },
+    { "id": "appearance", "type": "section", "label": "Appearance" },
+    { "id": "primaryColor", "type": "color", "label": "Primary color", "parent": "appearance", "scope": "layer", "default": "#7c5cff" },
+    { "id": "secondaryColor", "type": "color", "label": "Secondary color", "parent": "appearance", "scope": "layer", "default": "#39d9ff" },
+    { "id": "backgroundColor", "type": "color", "label": "Background", "parent": "appearance", "scope": "layer", "default": "#070912" },
+    { "id": "backgroundOpacity", "type": "range", "label": "Background opacity", "parent": "appearance", "scope": "layer", "default": 0.35, "min": 0, "max": 1, "step": 0.05 },
+    { "id": "glow", "type": "range", "label": "Glow", "parent": "appearance", "scope": "layer", "default": 18, "min": 0, "max": 48, "step": 1 },
+    { "id": "cornerRadius", "type": "range", "label": "Corner radius", "parent": "appearance", "scope": "layer", "default": 20, "min": 0, "max": 64, "step": 1 }
+  ],
+  "native": {
+    "companion": {
+      "runtime": "process-v2",
+      "entries": {
+        "windows-x86_64": "native/out/windows-x86_64/bin/backend.exe",
+        "windows-aarch64": "native/out/windows-aarch64/bin/backend.exe"
+      }
+    }
+  }
+}

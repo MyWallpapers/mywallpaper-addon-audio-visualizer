@@ -41,7 +41,7 @@ jobs:
         uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
         with:
           repository: MyWallpapers/native-addon-toolchain
-          ref: fce289da71538f7292bd9324b4f02e8ea469cea8
+          ref: 561d8248a09069e4a6c2d1dc305fb2678fd23529
           path: toolchain
           persist-credentials: false
       - name: Set up pinned Node.js

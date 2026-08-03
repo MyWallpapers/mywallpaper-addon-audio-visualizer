@@ -34,8 +34,7 @@
     "companion": {
       "runtime": "process-v2",
       "entries": {
-        "windows-x86_64": "native/out/windows-x86_64/bin/backend.exe",
-        "windows-aarch64": "native/out/windows-aarch64/bin/backend.exe"
+        "windows-x86_64": "native/out/windows-x86_64/bin/backend.exe"
       }
     }
   }

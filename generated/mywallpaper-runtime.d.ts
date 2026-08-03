@@ -56,7 +56,7 @@ export interface NativeHookEvent {
 	process: {
 		pid: number;
 		executable: string;
-		architecture: "windows-x86_64" | "windows-aarch64";
+		architecture: "windows-x86_64";
 	};
 }
 export interface CanvasBusEvent {

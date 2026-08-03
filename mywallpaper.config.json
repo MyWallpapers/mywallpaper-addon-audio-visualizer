@@ -12,13 +12,6 @@
         "args": ["install", "--locked", "--path", ".", "--root", "../out/windows-x86_64", "--target", "x86_64-pc-windows-msvc"],
         "cwd": "native/companion",
         "outputs": ["native/out/windows-x86_64/bin/backend.exe"]
-      },
-      {
-        "id": "companion-windows-aarch64",
-        "command": "cargo.exe",
-        "args": ["install", "--locked", "--path", ".", "--root", "../out/windows-aarch64", "--target", "aarch64-pc-windows-msvc"],
-        "cwd": "native/companion",
-        "outputs": ["native/out/windows-aarch64/bin/backend.exe"]
       }
     ]
   }

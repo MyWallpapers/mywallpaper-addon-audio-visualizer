@@ -2,4 +2,4 @@
 channel = "1.92.0"
 profile = "minimal"
 components = ["rustfmt"]
-targets = ["x86_64-pc-windows-msvc", "aarch64-pc-windows-msvc"]
+targets = ["x86_64-pc-windows-msvc"]

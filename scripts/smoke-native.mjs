@@ -2,6 +2,7 @@ import { spawn } from 'node:child_process'
 import { resolve } from 'node:path'
 
 const PROTOCOL_VERSION = 5
+const protocolOnly = process.env['MYWALLPAPER_SMOKE_PROTOCOL_ONLY'] === '1'
 const executable = resolve(process.argv[2] ?? 'native/out/windows-x86_64/bin/backend.exe')
 const child = spawn(executable, [], {
   env: { ...process.env, MYWALLPAPER_PROTOCOL: 'process-v2' },
@@ -21,7 +22,10 @@ child.stdout.on('data', (chunk) => {
     if (buffer.length < length + 4) return
     const message = JSON.parse(buffer.subarray(4, length + 4).toString('utf8'))
     buffer = buffer.subarray(length + 4)
-    if (message.type === 'ready') ready = true
+    if (message.type === 'ready') {
+      ready = true
+      if (protocolOnly) finish()
+    }
     if (message.type === 'message' && message.payload?.kind === 'audio.frame') {
       frame = Array.isArray(message.payload.bands) && message.payload.bands.length === 64
       if (ready && frame) finish()
@@ -55,6 +59,8 @@ function finish(error) {
     console.error(error.message)
     process.exitCode = 1
   } else {
-    console.log('Native WASAPI loopback smoke test passed.')
+    console.log(protocolOnly
+      ? 'Native protocol v5 handshake passed.'
+      : 'Native WASAPI loopback smoke test passed.')
   }
 }

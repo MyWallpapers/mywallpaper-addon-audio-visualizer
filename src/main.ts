@@ -55,11 +55,11 @@ export function mount({ layer, runtime, bus }: CanvasAddonMountContext): () => v
   void connect()
 
   async function connect(): Promise<void> {
-    if (!layer.native.companion.available) {
-      showStatus('Windows audio capture is unavailable. Enable this add-on’s native capability in MyWallpaper Desktop.', 'error')
-      return
-    }
     try {
+      // Native attachment is asynchronous: at mount time `available` can
+      // legitimately still be false while the desktop verifies the artifact
+      // and reconciles the scene. `connect()` owns that wait and resolves only
+      // when this exact layer has an open supervised session.
       const next = await layer.native.companion.connect()
       if (disposed) { next.close(); return }
       connection = next

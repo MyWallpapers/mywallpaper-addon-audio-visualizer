@@ -1,5 +1,5 @@
 use std::f32::consts::TAU;
-use std::io::{self, Read, Write};
+use std::io;
 use std::ptr;
 use std::sync::{Arc, Condvar, Mutex};
 use std::thread;
@@ -18,8 +18,11 @@ use windows::Win32::System::Com::{
     COINIT_MULTITHREADED,
 };
 
-const PROTOCOL_VERSION: u32 = 3;
-const MAX_FRAME_BYTES: usize = 1024 * 1024;
+mod framing;
+
+use framing::read_json_record;
+
+const PROTOCOL_VERSION: u32 = 5;
 const SPECTRUM_BANDS: usize = 64;
 const ANALYSIS_SAMPLES: usize = 1024;
 const WAVE_FORMAT_PCM: u16 = 1;
@@ -270,7 +273,7 @@ fn main() -> Result<(), String> {
     let mut sampler_thread = None;
 
     while let Some(frame) =
-        read_frame::<HostFrame>(&mut input).map_err(|error| error.to_string())?
+        read_json_record::<HostFrame>(&mut input).map_err(|error| error.to_string())?
     {
         let version = match &frame {
             HostFrame::Init { v, .. }
@@ -554,40 +557,11 @@ fn send_payload(output: &Arc<Mutex<io::Stdout>>, payload: Payload) -> Result<(),
     )
 }
 
-fn read_frame<T: for<'de> Deserialize<'de>>(reader: &mut impl Read) -> io::Result<Option<T>> {
-    let mut prefix = [0_u8; 4];
-    match reader.read(&mut prefix[..1])? {
-        0 => return Ok(None),
-        1 => reader.read_exact(&mut prefix[1..])?,
-        _ => unreachable!(),
-    }
-    let length = u32::from_le_bytes(prefix) as usize;
-    if length == 0 || length > MAX_FRAME_BYTES {
-        return Err(io::Error::new(
-            io::ErrorKind::InvalidData,
-            "invalid frame length",
-        ));
-    }
-    let mut payload = vec![0; length];
-    reader.read_exact(&mut payload)?;
-    serde_json::from_slice(&payload)
-        .map(Some)
-        .map_err(io::Error::other)
-}
-
 fn write_frame<T: Serialize>(output: &Arc<Mutex<io::Stdout>>, value: &T) -> Result<(), String> {
-    let payload = serde_json::to_vec(value).map_err(|error| error.to_string())?;
-    if payload.is_empty() || payload.len() > MAX_FRAME_BYTES {
-        return Err("outbound frame has an invalid size".to_owned());
-    }
     let mut output = output
         .lock()
         .map_err(|_| "output lock poisoned".to_owned())?;
-    output
-        .write_all(&(payload.len() as u32).to_le_bytes())
-        .and_then(|()| output.write_all(&payload))
-        .and_then(|()| output.flush())
-        .map_err(|error| error.to_string())
+    framing::write_json_record(&mut *output, value).map_err(|error| error.to_string())
 }
 
 fn write_companion_error(

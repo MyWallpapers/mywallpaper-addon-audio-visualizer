@@ -1,6 +1,7 @@
 import { spawn } from 'node:child_process'
 import { resolve } from 'node:path'
 
+const PROTOCOL_VERSION = 5
 const executable = resolve(process.argv[2] ?? 'native/out/windows-x86_64/bin/backend.exe')
 const child = spawn(executable, [], {
   env: { ...process.env, MYWALLPAPER_PROTOCOL: 'process-v2' },
@@ -34,7 +35,7 @@ child.stdout.on('data', (chunk) => {
 child.on('error', finish)
 child.on('exit', (code) => { if (!frame) finish(new Error(`native companion exited with ${code}`)) })
 
-write({ type: 'init', v: 3, layerSettings: {}, deviceSettings: { refreshRate: '30fps' } })
+write({ type: 'init', v: PROTOCOL_VERSION, layerSettings: {}, deviceSettings: { refreshRate: '30fps' } })
 
 function write(value) {
   const payload = Buffer.from(JSON.stringify(value))
@@ -48,7 +49,7 @@ function finish(error) {
   if (finished) return
   finished = true
   clearTimeout(timeout)
-  try { write({ type: 'shutdown', v: 3 }) } catch {}
+  try { write({ type: 'shutdown', v: PROTOCOL_VERSION }) } catch {}
   child.stdin.end()
   if (error) {
     console.error(error.message)

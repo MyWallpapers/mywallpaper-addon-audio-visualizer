@@ -53,3 +53,12 @@ jobs:
           node toolchain/.github/scripts/build-native-companions.mjs `
             --repository-root addon `
             --output-root "$env:RUNNER_TEMP/mywallpaper-companion-output"
+      - name: Verify native protocol and Windows integration
+        shell: pwsh
+        env:
+          CARGO_INCREMENTAL: '0'
+        run: |
+          cargo test --locked --manifest-path addon/native/companion/Cargo.toml --target x86_64-pc-windows-msvc
+          if ($LASTEXITCODE -ne 0) { throw 'Native protocol unit tests failed' }
+          node addon/scripts/smoke-native.mjs addon/native/out/windows-x86_64/bin/backend.exe
+          if ($LASTEXITCODE -ne 0) { throw 'Native Windows integration smoke test failed' }

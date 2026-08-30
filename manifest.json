@@ -1,5 +1,5 @@
 {
-  "runtime": "canvas-v1",
+  "runtime": "canvas-native-v1",
   "name": "Audio Visualizer",
   "description": "Visualizes the audio currently playing on Windows through an open-source WASAPI loopback companion.",
   "version": "1.0.6",

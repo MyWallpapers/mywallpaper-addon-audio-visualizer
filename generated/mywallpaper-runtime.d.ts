@@ -13,32 +13,19 @@ export type RuntimeInstance = {
 	width: number;
 	height: number;
 };
-type ResourceValue = {
+export type ResourceValue = {
 	"kind": "live";
 	url: string;
 };
 export type AddonValues = Record<string, JsonValue>;
-declare const CANVAS_HOST_MESSAGE_SOURCE = "mywallpaper-web-host";
-export type NativeConnectionState = "open" | "reconnecting" | "failed" | "closed";
 export type CanvasApiListener<TValue = unknown> = (value: TValue) => void;
+export type NativeConnectionState = "open" | "reconnecting" | "failed" | "closed";
 export interface NativeConnection {
 	readonly state: NativeConnectionState;
 	send(payload: JsonValue): Promise<void>;
 	onMessage(listener: CanvasApiListener<JsonValue>): () => void;
 	onStateChange(listener: CanvasApiListener<NativeConnectionState>): () => void;
 	close(): void;
-}
-export interface LayerNativeApi {
-	readonly companion: {
-		readonly available: boolean;
-		connect(): Promise<NativeConnection>;
-	};
-	readonly hooks: {
-		readonly available: boolean;
-		status(hookId: string): NativeHookStatus | null;
-		onStateChange(listener: CanvasApiListener<readonly NativeHookStatus[]>): () => void;
-		onEvent(listener: CanvasApiListener<NativeHookEvent>): () => void;
-	};
 }
 export type NativeHookStatus = {
 	hookId: string;
@@ -49,14 +36,15 @@ export type NativeHookStatus = {
 	cause: string;
 	action: string;
 });
-export interface NativeHookEvent {
-	hookId: string;
-	topic: string;
-	payload: JsonValue;
-	process: {
-		pid: number;
-		executable: string;
-		architecture: "windows-x86_64";
+export interface LayerNativeApi {
+	readonly companion: {
+		readonly available: boolean;
+		connect(): Promise<NativeConnection>;
+	};
+	readonly hooks: {
+		readonly available: boolean;
+		status(hookId: string): NativeHookStatus | null;
+		onStateChange(listener: CanvasApiListener<readonly NativeHookStatus[]>): () => void;
 	};
 }
 export interface CanvasBusEvent {
@@ -77,13 +65,16 @@ export interface LayerSettingsApi {
 	set(partial: AddonValues): Promise<void>;
 	subscribe(listener: CanvasApiListener<AddonValues>): () => void;
 }
+export interface CanvasActionEvent {
+	key: string;
+}
 export interface LayerActionsApi {
-	on(key: string, listener: CanvasApiListener<CanvasActionMessage>): () => void;
+	on(key: string, listener: CanvasApiListener<CanvasActionEvent>): () => void;
 }
 export interface LayerLifecycleApi {
 	onDispose(listener: () => void): () => void;
 }
-interface LayerResourcesApi {
+export interface LayerResourcesApi {
 	resolve(value: ResourceValue): Promise<string>;
 }
 export interface CanvasRuntimeApi {
@@ -92,10 +83,7 @@ export interface CanvasRuntimeApi {
 	readonly instance: RuntimeInstance;
 }
 export interface CanvasLayerApi {
-	/**
-	 * Stable container owned by this layer instance. Every layer has a distinct
-	 * root, while all roots share the same Canvas `document` and `window`.
-	 */
+	/** Stable container owned by this layer instance inside the shared Canvas document. */
 	readonly root: HTMLElement;
 	readonly layerId: string;
 	readonly settings: LayerSettingsApi;
@@ -118,12 +106,6 @@ export type CanvasAddonCleanup = () => void;
 export type CanvasAddonMount = (context: CanvasAddonMountContext) => void | CanvasAddonCleanup;
 export interface CanvasAddonModule {
 	readonly mount: CanvasAddonMount;
-}
-interface CanvasActionMessage {
-	source: typeof CANVAS_HOST_MESSAGE_SOURCE;
-	type: "CANVAS_ACTION";
-	layerId: string;
-	key: string;
 }
 
 export {};

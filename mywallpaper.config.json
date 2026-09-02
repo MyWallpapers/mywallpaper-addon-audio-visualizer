@@ -4,7 +4,6 @@
     "args": ["node_modules/vite/bin/vite.js", "--host", "127.0.0.1", "--port", "5181"]
   },
   "native": {
-    "previewDirectory": "public/__mywallpaper/native",
     "builds": [
       {
         "id": "companion-windows-x86_64",
